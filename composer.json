@@ -1,26 +1,25 @@
 {
     "name": "mineralcms/flashsale",
+    "description": "mineral cms to add input flash sale laravel",
     "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Haycal",
+            "email": "haycal@mineral.co.id"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Mineralcms\\Flashsale\\": "src/"
         }
     },
     "minimum-stability": "dev",
-    "require": {
-        "laravelcollective/html": "^5.5"
-    },
     "extra": {
         "laravel": {
             "providers": [
                 "mineralcms\\flashsale\\FlashsaleServiceProvider"
             ]
         }
-    },
-    "authors": [
-        {
-            "name": "haycalgiyaz",
-            "email": "48546201+haycalgiyaz@users.noreply.github.com"
-        }
-    ]
+    }
 }
