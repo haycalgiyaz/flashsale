@@ -18,6 +18,7 @@
     "extra": {
         "laravel": {
             "providers": [
+                // "Haycalgiyaz\\Flashsale\\FlashsaleServiceProvider"
                 "Haycalgiyaz\\Flashsale\\FlashsaleServiceProvider"
             ]
         }
