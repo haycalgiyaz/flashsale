@@ -1,0 +1,26 @@
+{
+    "name": "mineralcms/flashsale",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Mineralcms\\Flashsale\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "laravelcollective/html": "^5.5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mineralcms\\flashsale\\FlashsaleServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "haycalgiyaz",
+            "email": "48546201+haycalgiyaz@users.noreply.github.com"
+        }
+    ]
+}
