@@ -1,5 +1,5 @@
 <?php
 
-// Route::resource('/flashsale', 'Mineralcms\Flashsale\Controllers\FlashSaleController');
+// Route::resource('/flashsale', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController');
 
-Route::get('testing', 'Mineralcms\Flashsale\Controllers\FlashSaleController@testing');
+Route::get('testing', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@testing');

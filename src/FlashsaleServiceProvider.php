@@ -1,6 +1,6 @@
 <?php
 
-namespace Mineralcms\Flashsale;
+namespace Haycalgiyaz\Flashsale;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -13,7 +13,7 @@ class FlashsaleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('Mineralcms\Flashsale\Controllers\FlashSaleController');
+        $this->app->make('Haycalgiyaz\Flashsale\Controllers\FlashSaleController');
     }
 
     /**

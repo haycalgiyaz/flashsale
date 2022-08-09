@@ -1,6 +1,6 @@
 <?php
 
-namespace Mineralcms\Flashsale\Models;
+namespace Haycalgiyaz\Flashsale\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

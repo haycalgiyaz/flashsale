@@ -1,10 +1,10 @@
 <?php
 
-namespace Mineralcms\Flashsale\Controllers;
+namespace Haycalgiyaz\Flashsale\Controllers;
 
 use App\Http\Controllers\Controller;
 use Request;
-use Mineralcms\Flashsale\Models\FlashSale;
+use Haycalgiyaz\Flashsale\Models\FlashSale;
 
 class FlashSaleController extends Controller
 {
@@ -52,6 +52,6 @@ class FlashSaleController extends Controller
 
     public function testing()
     {
-        
+
     }
 }

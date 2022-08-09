@@ -1,5 +1,5 @@
 {
-    "name": "mineralcms/flashsale",
+    "name": "haycalgiyaz/flashsale",
     "description": "mineral cms to add input flash sale laravel",
     "type": "library",
     "license": "MIT",
@@ -11,14 +11,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mineralcms\\Flashsale\\": "src/"
+            "Haycalgiyaz\\Flashsale\\": "src/"
         }
     },
     "minimum-stability": "dev",
     "extra": {
         "laravel": {
             "providers": [
-                "mineralcms\\flashsale\\FlashsaleServiceProvider"
+                "haycalgiyaz\\flashsale\\FlashsaleServiceProvider"
             ]
         }
     }
