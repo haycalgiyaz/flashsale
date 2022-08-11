@@ -14,6 +14,10 @@ class FlashsaleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->make('Haycalgiyaz\Flashsale\Controllers\FlashSaleController');
+
+        $this->mergeConfigFrom(
+            $this->getConfigPath(), 'flashsale'
+        );
     }
 
     /**
@@ -30,5 +34,16 @@ class FlashsaleServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/mineralcms/flashsale'),
         ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                $this->getConfigPath() => config_path('flashsale.php')
+            ]);
+        }
+    }
+
+    public function getConfigPath()
+    {
+        return __DIR__ . '/../config/flashsale.php';
     }
 }

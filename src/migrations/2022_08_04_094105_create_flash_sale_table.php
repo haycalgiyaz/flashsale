@@ -15,8 +15,19 @@ class CreateFlashSaleTable extends Migration
     {
         Schema::create('flash_sales', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->binary('uuid', 16);
+            $table->string('name', 255);
+            $table->string('slug', 255);
+            $table->string('excerpt', 255)->nullable();
+            $table->integer('discount_price')->default(0);
+            $table->integer('discount_percent')->default(0);
+            $table->integer('user_level')->default(0);
+            $table->integer('is_publish')->default(0);
+            $table->timestamp('published_at')->nullable();
+            $table->timestamp('ended_at');
             $table->timestamps();
+            $table->timestamp('deleted_at')->nullable();
+            $table->index(['user_level', 'is_publish']);
         });
     }
 
