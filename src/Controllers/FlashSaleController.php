@@ -103,18 +103,13 @@ class FlashSaleController extends Controller
     {
         $data = Product::withCount(['flashsale' => function($q) use ($id){
             $q->where('flash_sale_id', $id);
-
         }])
-        ->take(20)
         ->get();
 
         $json = ProductCollection::collection($data);
 
         return response()->json($json);
     }
-
-
-
 
     public function create()
     {

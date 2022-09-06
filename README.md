@@ -56,3 +56,37 @@ Add FlashSale relations to Product Model
         return $this->morphedByMany(Flashsale::class, 'flash_sale', 'flash_sale_products');
     }
 ```
+
+### Product Tree
+
+Make new Resources at App\Http\Resources and save as ProductCollection
+
+``` php
+<?php
+
+namespace App\Http\Resources;
+
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ProductCollection extends JsonResource
+{
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'parent' => (!$this->parent_id ? '#' : $this->parent_id),
+            'text' => '<span class="badge badge-'.($this->is_publish ? 'success' : 'secondary').' badge-pill" style="width:10px; height:10px; line-height:2px">'.($this->is_publish ? 'Published' : 'Unpublished').'</span>&nbsp;'.$this->name,
+            'state' => ['opened' => true, 'selected' => (bool) $this->flashsale_count]
+
+        ];
+    }
+}
+
+```
