@@ -49,7 +49,7 @@
 	                            <label for="name">Tier level user</label>
 	                            <select class="form-control" name="user_level">
 	                            	@foreach(config('flashsale.user_level') as $key => $level)
-	                            	<option value="{{ $key }}">{{ $level}}</option>
+	                            	<option value="{{ $key }}" {{ ($flashsale->user_level == $key ? 'selected' : '')}}>{{ $level}}</option>
 	                            	@endforeach
 	                            </select>
 	                        </div>
