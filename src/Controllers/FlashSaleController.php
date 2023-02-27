@@ -80,6 +80,7 @@ class FlashSaleController extends Controller
 
             $flash->name = $request->name;
             $flash->excerpt = $request->excerpt;
+            $flash->type = $request->type;
             $flash->user_level = $request->user_level;
             $flash->discount_percent = ($request->discount_percent ? $request->discount_percent : 0);
             $flash->discount_price = ($request->discount_price ? $request->discount_price : 0);

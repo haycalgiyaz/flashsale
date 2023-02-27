@@ -46,6 +46,18 @@
                     <div class="row">
                     	<div class="col-md-12">
 	                        <div class="form-group">
+	                            <label for="excerpt">Discount Type</label>
+	                            <select class="form-control" name="type" >
+	                            	<option value="">-- Select Type --</option>
+	                            	<option value="DISCOUNT" {{ $flashsale->type == 'DISCOUNT' ? 'selected' : '' }}>DISCOUNT</option>
+	                            	<option value="FREE_ONGKIR" {{ $flashsale->type == 'FREE_ONGKIR' ? 'selected' : '' }}>FREE ONGKIR</option>
+	                            </select>
+	                        </div>
+                    	</div>
+                    </div>
+                    <div class="row">
+                    	<div class="col-md-12">
+	                        <div class="form-group">
 	                            <label for="name">Tier level user</label>
 	                            <select class="form-control" name="user_level">
 	                            	@foreach(config('flashsale.user_level') as $key => $level)
