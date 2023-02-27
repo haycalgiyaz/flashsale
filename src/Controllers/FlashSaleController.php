@@ -100,12 +100,17 @@ class FlashSaleController extends Controller
         return redirect('flash-sale');
     }
 
-    public function productsTree($id = null)
+    public function productsTree(Request $request, $id = null)
     {
         $data = Product::withCount(['flashsale' => function($q) use ($id){
             $q->where('flash_sale_id', $id);
-        }])
-        ->get();
+        }]);
+
+        if ($request->has('publish') && $request->publish ==1 ) {
+            $data = $data->publish();
+        }
+
+        $data = $data->get();
 
         $json = ProductCollection::collection($data);
 

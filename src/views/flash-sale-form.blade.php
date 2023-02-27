@@ -47,8 +47,7 @@
                     	<div class="col-md-12">
 	                        <div class="form-group">
 	                            <label for="excerpt">Discount Type</label>
-	                            <select class="form-control" name="type" >
-	                            	<option value="">-- Select Type --</option>
+	                            <select class="form-control" name="type" id="type">
 	                            	<option value="DISCOUNT" {{ $flashsale->type == 'DISCOUNT' ? 'selected' : '' }}>DISCOUNT</option>
 	                            	<option value="FREE_ONGKIR" {{ $flashsale->type == 'FREE_ONGKIR' ? 'selected' : '' }}>FREE ONGKIR</option>
 	                            </select>
@@ -67,7 +66,7 @@
 	                        </div>
                     	</div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="discount_value" {{ $flashsale->type == 'FREE_ONGKIR' ? 'style="display:none"' : ''}}>
 	                    <div class="col-6">
 	                    	<div class="form-group">
 	                            <label for="discount_price">Discount (IDR)</label>
@@ -140,9 +139,19 @@
                              <div class="px-2 pb-2">
 	                            <input type="text" x-ref="category" id="cat-src" class="form-control" placeholder="Search Product">
 	                        </div>
-	                        <label for="chkSelectAll">
-	                        	<input type="checkbox" class="mr-2 ml-2" name="chkSelectAll" id="chkSelectAll" >Select All<br />
-	                        </label>
+	                        <div class="d-flex justify-content-between">
+					            <div class="form-check">
+					              	<label for="chkSelectAll" class="form-check-label">
+					                	<input type="checkbox" class="form-check-input" name="chkSelectAll" id="chkSelectAll"> Select All
+					              	</label>
+					            </div>
+
+		                        <div class="form-check">
+					              	<label class="form-check-label">
+					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Publish Only	
+					              	</label>
+					            </div>
+	                        </div>
                             <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
                             <div id="prod-holder"></div>
                         </div>
@@ -176,6 +185,8 @@
 
     <script type="text/javascript">
     	$(function(){
+    		var param = '?publish=0';
+    		var treeUrl = '{{ url("flash-sale/tree/".$flashsale->id) }}';
 			// $('.date-time').each(function() {
 	            $('#datetimepicker').datetimepicker({
 	                format: 'DD-MM-YYYY HH:mm',
@@ -203,10 +214,23 @@
 	         	}
 	         })
 
+	         $('#chkPublishOnly').on('click',function () {
+	         	let cxbx = $(this).is(':checked')
+	         	if (cxbx) {
+	         		param = '?publish=1';
+	         	}else{
+	         		param = '';
+	         	}
+
+	         	$('#product-tree').jstree(true).settings.core.data.url = treeUrl+param;
+	         	// console.log(treeUrl.param);
+	         	$('#product-tree').jstree(true).refresh();
+	         })
+
 	        $('#product-tree').jstree({
 		        "core" : {
 		            'data' : {
-		                'url' : '{{ url("flash-sale/tree/".$flashsale->id) }}',
+		                'url' : treeUrl,
 		                'data' : function (node) {
 		                    return { 'id' : node.id };
 		                }
@@ -252,6 +276,17 @@
 	            $('#form').off('submit');
 	            $(this).submit();
 	        });
+
+	        $('#type').on('change', function() {
+	        	console.log('here');
+	        	let value = $(this).val();
+
+	        	if (value == 'FREE_ONGKIR') {
+	        		$('#discount_value').hide();
+	        	}else{
+	        		$('#discount_value').show();
+	        	}
+	        })
 		});
     </script>
 @endsection
