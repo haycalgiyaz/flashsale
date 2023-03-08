@@ -34,10 +34,20 @@ class FlashSaleController extends Controller
                     </div>';
         })
         ->editColumn('discount',function($row){
+            if ($row->type == 'FREE_ONGKIR') {
+                return 'Free Ongkir';
+            }
             if ($row->discount_price) {
                 return 'Flat IDR '.$row->discount_price;
             }else{
                 return $row->discount_percent.'%';
+            }
+        })
+        ->editColumn('type',function($row){
+            if ($row->type == 'FREE_ONGKIR') {
+                return 'FREE ONGKIR';
+            }else{
+                return 'DISCOUNT';
             }
         })
         ->editColumn('excerpt',function($row){
@@ -82,6 +92,7 @@ class FlashSaleController extends Controller
             $flash->excerpt = $request->excerpt;
             $flash->type = $request->type;
             $flash->user_level = $request->user_level;
+            $flash->minimum_qty = $request->minimum_qty;
             $flash->discount_percent = ($request->discount_percent ? $request->discount_percent : 0);
             $flash->discount_price = ($request->discount_price ? $request->discount_price : 0);
             $flash->is_publish = ($request->input('is_publish') ? 1 : 0);

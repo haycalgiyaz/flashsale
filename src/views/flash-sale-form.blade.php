@@ -10,13 +10,14 @@
 <style>
 	.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
 .toggle.ios .toggle-handle { border-radius: 20rem; }
+
 </style>
 @endsection
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
     <div>
-        <h4 class="mb-3 mb-md-0">Flash Sale <a href="{{ url('menu') }}" class="btn btn-primary btn-xs" ><i class="tiny mdi mdi-plus"></i></a></h4>
+        <h4 class="mb-3 mb-md-0">Flash Sale <a href="{{ url('flash-sale/form') }}" class="btn btn-primary btn-xs" ><i class="tiny mdi mdi-plus"></i></a></h4>
     </div>
 </div>
 <form id="form" method="post" >
@@ -24,7 +25,7 @@
 	<div class="row">
 		
 		<div class="col-md-6 grid-margin stretch-card">
-			<div class="card" style="max-height: 560px;">
+			<div class="card" style="max-height: 640px;">
 				<div class="card-body" >
 					{{-- <h4 class="mb-4">General Information</h4> --}}
 	                <div class="row">
@@ -54,7 +55,7 @@
 	                        </div>
                     	</div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="display:none">
                     	<div class="col-md-12">
 	                        <div class="form-group">
 	                            <label for="name">Tier level user</label>
@@ -66,7 +67,15 @@
 	                        </div>
                     	</div>
                     </div>
-                    <div class="row" id="discount_value" {{ $flashsale->type == 'FREE_ONGKIR' ? 'style="display:none"' : ''}}>
+                    <div class="row">
+                    	<div class="col-md-12">
+	                        <div class="form-group">
+	                            <label for="name">Minimum Qty</label>
+	                              <input type="number" name="minimum_qty" class="form-control" id="minimum_qty" placeholder="1" value="{{ $flashsale->minimum_qty }}">
+	                        </div>
+                    	</div>
+                    </div>
+                    <div class="row" id="discount_value" {{ $flashsale->type == 'FREE_ONGKIR' ? "style=display:none" : '' }} >
 	                    <div class="col-6">
 	                    	<div class="form-group">
 	                            <label for="discount_price">Discount (IDR)</label>
@@ -145,10 +154,9 @@
 					                	<input type="checkbox" class="form-check-input" name="chkSelectAll" id="chkSelectAll"> Select All
 					              	</label>
 					            </div>
-
 		                        <div class="form-check">
 					              	<label class="form-check-label">
-					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Publish Only	
+					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Show publish
 					              	</label>
 					            </div>
 	                        </div>
