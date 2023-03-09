@@ -29,7 +29,7 @@ class FlashSaleController extends Controller
         ->editColumn('is_publish',' {!! ($is_publish == 1 && strtotime($published_at) <= time() && strtotime($ended_at) >= time() ? "<span class=\'badge badge-success\'>Published</span>" : "<span class=\'badge badge-warning\'>Not Published</span>") !!} ')
         ->addColumn('action', function ($row) {
             return '<div class="btn-group">
-                        <a href="'.url('flash-sale/form').'/'.$row->id.'" class="btn btn-xs btn-warning" type="button" data-toggle="tooltip" title="Edit" ><i class="mdi mdi-lead-pencil" style="font-size:11px"></i></a>
+                        <a href="'.url('flash-sale/form').'/'.$row->id.'" class="btn btn-xs btn-secondary" type="button" data-toggle="tooltip" title="Edit" ><i class="mdi mdi-lead-pencil" style="font-size:11px"></i></a>
                         <button class="btn btn-xs btn-danger" type="button" title="Remove" onclick="mineral_confirm(\''.$row->name.'\',\''.$row->id.'\')" > <i class="mdi mdi-delete-forever" style="font-size:11px"></i></button>
                     </div>';
         })
