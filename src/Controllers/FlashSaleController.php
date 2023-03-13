@@ -158,15 +158,10 @@ class FlashSaleController extends Controller
         return redirect()->route('flashsale.create');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $flash = FlashSale::findOrFail($id);
-        $task->delete();
-        return redirect()->route('task.create');
-    }
-
-    public function testing()
-    {
-
+        $flash = FlashSale::findOrFail($request->id);
+        $flash->delete();
+        return redirect()->back();
     }
 }
