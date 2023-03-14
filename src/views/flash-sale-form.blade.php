@@ -22,7 +22,7 @@
 </div>
 <form id="form" method="post" >
 	{{ csrf_field() }}
-	<div class="row">
+	<div class="row" id="app">
 		
 		<div class="col-md-6 grid-margin stretch-card">
 			<div class="card" style="max-height: 640px;">
@@ -139,13 +139,68 @@
 			</div>
 		</div>
 
-		<div class="col-md-4 grid-margin stretch-card">
+		<div class="col-md-5 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
 					<div class="form-group">
                         <div class="col-xs-12">
                             <label for="product-tree">Choose Product</label>
-                             <div class="px-2 pb-2">
+                            <div >
+                            	<div class="d-flex justify-content-between">
+                            		<div class="form-group">
+                            			<select class="form-control" v-model="limit">
+                            				<option>15</option>
+                            				<option>25</option>
+                            				<option>50</option>
+                            				<option>100</option>
+                            			</select>
+                            		</div>
+					            	<div class="form-check">
+	                            		<label class="form-check-label">
+						                	<input type="checkbox" class="form-check-input" v-model="select_all"> Select All
+						              	</label>
+					            	</div>
+					            	<div class="form-check">
+						              	<label class="form-check-label">
+						                	<input type="checkbox" v-model="publish" class="form-check-input"> Show publish
+						              	</label>
+                            		</div>
+                            	</div>
+                            	<div class="list-area">
+									<div class="form-group">
+										<input type="text" v-model="search" class="form-control" placeholder="Type to search">
+									</div>
+									<div class="d-flex justify-content-end">
+										<span v-if="selectedProducts.length > 0">@{{ selectedProducts.length }} Products Selected</span>
+									</div>
+
+									<div class="list-group">
+										<template v-for="product in products">
+										 	<a class="px-3 py-1 d-flex justify-content-between list-group-item list-group-item-action" :class="[{'bg-secondary text-white' : checkInArray(product, selectedProducts)}]" @click="selectItem(product.id)">
+										    	<span v-html="product.text_sort"></span>
+										    	<button v-if="checkInArray(product, selectedProducts)" class="btn btn-danger btn-icon btn-sm" style="width:25px!important; height: 25px!important;"><span class="mdi mdi-delete"></span></button>
+										  	</a>
+										</template>
+									</div>
+
+									<p style="margin-top:10px">Page @{{paginate.currentPage}} of @{{ paginate.lastPage}}</p>
+									<nav aria-label="Page navigation example" style="margin-top:10px">
+									 	<ul class="pagination">
+									    	<li class="page-item" :class="[{'d-none' : paginate.currentPage == 1}]" ><a class="page-link"@click="goTo(paginate.currentPage - 1)"><i data-feather="chevron-left"></i></a></li>
+									    	<template v-for="i in paginate.pages" :index="i">
+									    		<li class="page-item " :class="[{ 'active' : i === paginate.currentPage }]"><a class="page-link" @click="goTo(i)">@{{ i }}</a></li>
+									    	</template>
+
+									    	<li class="page-item" v-if="paginate.currentPage !=  paginate.lastPage"><a class="page-link" @click="goTo(paginate.currentPage + 1)"><i data-feather="chevron-right"></i></a></li>
+									  	</ul>
+									</nav>
+
+									<template v-for="product in selectedProducts">
+										<input type="hidden" name="products[]" :value="product">
+									</template>
+                            	</div>
+                            </div>
+                            {{-- <div class="px-2 pb-2">
 	                            <input type="text" x-ref="category" id="cat-src" class="form-control" placeholder="Search Product">
 	                        </div>
 	                        <div class="d-flex justify-content-between">
@@ -161,7 +216,7 @@
 					            </div>
 	                        </div>
                             <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
-                            <div id="prod-holder"></div>
+                            <div id="prod-holder"></div> --}}
                         </div>
                     </div>
 				</div>
@@ -190,6 +245,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.1/dist/alpine.min.js" defer></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <script type="text/javascript">
     	$(function(){
@@ -256,34 +312,34 @@
 		        },
 		    });
 
-		    $("#form").on('submit',function(e){
-	            e.preventDefault();
-	            var selectedCategories = [];
+		    // $("#form").on('submit',function(e){
+	        //     e.preventDefault();
+	        //     var selectedCategories = [];
 
-	            //handle categories
+	        //     //handle categories
 
-	            var categories = $("#product-tree").jstree("get_selected",true);
-	            $.each(categories,function(index,val){
-	                selectedCategories.push(val.id);
-	                // if(val.parent != '#') // index == 0 &&
-	                // {
-	                //     selectedCategories.push(val.parent);
-	                // }
-	                //
-	                // if(selectedCategories.indexOf(val.id) == -1)
-	                // {
-	                //     selectedCategories.push(val.id);
-	                // }
+	        //     var categories = $("#product-tree").jstree("get_selected",true);
+	        //     $.each(categories,function(index,val){
+	        //         selectedCategories.push(val.id);
+	        //         // if(val.parent != '#') // index == 0 &&
+	        //         // {
+	        //         //     selectedCategories.push(val.parent);
+	        //         // }
+	        //         //
+	        //         // if(selectedCategories.indexOf(val.id) == -1)
+	        //         // {
+	        //         //     selectedCategories.push(val.id);
+	        //         // }
 
-	            });
+	        //     });
 
-	            $.each(selectedCategories,function(index,val){
-	                $('#prod-holder').append('<input type="hidden" name="products[]" value="'+val+'" />');
-	            });
+	        //     $.each(selectedCategories,function(index,val){
+	        //         $('#prod-holder').append('<input type="hidden" name="products[]" value="'+val+'" />');
+	        //     });
 
-	            $('#form').off('submit');
-	            $(this).submit();
-	        });
+	        //     $('#form').off('submit');
+	        //     $(this).submit();
+	        // });
 
 	        $('#type').on('change', function() {
 	        	console.log('here');
@@ -297,4 +353,135 @@
 	        })
 		});
     </script>
+
+	<script>
+	  	const { createApp } = Vue
+
+	  	createApp({
+	    	data() {
+	     		return {
+	     			selectedProducts: [],
+	     			products: [],
+	     			paginate:{
+	     				currentPage: 1,
+	     				pages: [],
+	     				lastPage: 0,
+	     				total: 0
+	     			},
+	     			limit: 15,
+	        		search: '',
+	        		publish: false,
+	        		select_all: false,
+	      		}
+	    	},
+	    	mounted(){
+	    		this.getListProduct()
+	    	},
+			watch: {
+				search: function(newData, oldData) {
+					if (newData.length > 2) {
+	    				this.paginate.currentPage = 1;
+						this.getListProduct();
+					}else if(newData.length == 0){
+						this.paginate.currentPage = 1;
+						this.getListProduct();
+					}
+				},
+				publish: function(newData, oldData) {
+					this.paginate.currentPage = 1;
+					this.getListProduct();
+				},
+				select_all: function(newData, oldData) {
+					if (newData) {
+						for (var i = 0; i < this.products.length; i++) {
+	 						var product = this.products[i];
+
+							if (!this.selectedProducts.includes(product.id)) {
+								this.selectedProducts.push(product.id);
+							}
+	 					}
+					}else{
+						this.selectedProducts = [];
+					}
+				},
+				limit: function(newData, oldData) {
+					this.paginate.currentPage = 1;
+					this.getListProduct();	
+				}
+			},
+	    	methods: {
+	    		async getListProduct() {
+	    			var url = encodeURI(`/flash-sale/product/{{$flashsale->id}}?page=`+this.paginate.currentPage);
+
+	    			if (this.search.length > 2) {
+	    				url += '&search='+this.search;
+	    			}
+	    			if (this.publish) {
+	    				url += '&publish=1';
+	    			}
+	    			url += '&limit='+this.limit;
+	    			
+
+					await axios({
+						method: 'get',
+						url: url,
+					})
+					.then((r)=>{
+						if (r.data.success) {
+							this.products = r.data.products.items;
+							this.paginate.currentPage = r.data.products.currentPage;
+	     					this.paginate.lastPage = r.data.products.lastPage;
+	     					this.paginate.total = r.data.products.total;
+
+	     					var pages = [];
+
+	     					for (var i = 0; i < r.data.products.items.length; i++) {
+	     						var product = r.data.products.items[i];
+
+	     						if (product.state.selected) {
+									if (!this.selectedProducts.includes(product.id)) {
+										this.selectedProducts.push(product.id);
+										console.log('run')
+									}
+	     						}
+	     					}
+
+	     					for (var i = this.paginate.currentPage - 2; i <= this.paginate.currentPage+2; i++) {
+	     						if (i > 0 && i <= this.paginate.lastPage) {
+	     							pages.push(i)
+	     						}
+	     					}
+	     					this.paginate.pages = pages;
+						}
+					})
+					.catch()
+				},
+				showPublish(){
+					console.log('here');
+				},
+				selectAll(){
+					
+				},
+				checkInArray(item, dataArr){
+					return dataArr.includes(item.id);
+				},
+				selectItem(i){
+					if (this.selectedProducts.includes(i)) {
+						const index = this.selectedProducts.indexOf(i);
+						if (index > -1) {
+						 	this.selectedProducts.splice(index, 1); 
+						}
+					}else{
+						this.selectedProducts.push(i)
+					}
+
+				},
+				goTo(i){
+					this.paginate.currentPage = i;
+					this.getListProduct()
+				}
+	    	}
+
+	  	}).mount('#app')
+	</script>
 @endsection

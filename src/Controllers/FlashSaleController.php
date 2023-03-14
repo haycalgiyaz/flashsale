@@ -4,9 +4,11 @@ namespace Haycalgiyaz\Flashsale\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Http\Resources\ProductCollection;
+use Haycalgiyaz\Flashsale\Resources\ProductCollection;
+use Haycalgiyaz\Flashsale\Resources\ProductPaginationResource;
 use Haycalgiyaz\Flashsale\Models\FlashSale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
 use Storage;
 use Image;
@@ -123,9 +125,37 @@ class FlashSaleController extends Controller
 
         $data = $data->get();
 
-        $json = ProductCollection::collection($data);
+        $data = $data->sortBy(function ($product, $key) {
+            return $product->flashsale_count;
+        });
 
+        $json = ProductCollection::collection($data);
         return response()->json($json);
+    }
+
+    public function getProductList(Request $request, $id = null)
+    {
+        $limit = $request->has('limit') ? $request->limit : 15;
+
+        $products = Product::withCount(['flashsale' => function($q) use ($id){
+            $q->where('flash_sale_id', $id);
+        }]);
+
+        if ($request->has('publish') && $request->publish ==1 ) {
+            $products = $products->publish();
+        }
+
+        if ($request->has('search')) {
+            $products = $products->where('name', 'like', '%'.$request->search.'%');
+        }
+
+        $products = $products->orderBy('flashsale_count', 'desc')->paginate($limit);
+
+        $json = new ProductPaginationResource($products);
+        return response([
+            'success' => true,
+            'products' => $json
+        ]);
     }
 
     public function create()
