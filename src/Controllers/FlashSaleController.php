@@ -83,6 +83,7 @@ class FlashSaleController extends Controller
 
     public function doForm(Request $request, $id = null)
     {
+        // dd($request->all());
         try {
             if ($id) {
                 $flash = FlashSale::where('id', $id)->first();
@@ -103,14 +104,27 @@ class FlashSaleController extends Controller
             
             $flash->save();
 
-            $flash->products()->sync($request->products);
+            if ($request->choose_all) {
+                if ($request->choose_all == 'deselect') {
+                    $flash->products()->sync([]);
+                }else{
+                    $product = Product::query();
+                    if ($request->choose_all == 'publish') {
+                        $product = $product->publish();
+                    }
+                    $flash->products()->sync($product->pluck('id'));
+                }
+
+            }else{
+                $flash->products()->sync($request->products);
+            }
 
         } catch (\Exception $e) {
             dd(($e->getMessage()));
         }
 
 
-        return redirect('flash-sale');
+        return redirect()->back()->with('notif', 'Success Update Flash Sale');
     }
 
     public function productsTree(Request $request, $id = null)

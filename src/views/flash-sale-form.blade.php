@@ -148,7 +148,7 @@
                             <div >
                             	<div class="d-flex justify-content-between">
                             		<div class="form-group">
-                            			<select class="form-control" v-model="limit">
+                            			<select class="form-control" v-model="limit" title="Show List">
                             				<option>15</option>
                             				<option>25</option>
                             				<option>50</option>
@@ -156,12 +156,12 @@
                             			</select>
                             		</div>
 					            	<div class="form-check">
-	                            		<label class="form-check-label">
+	                            		<label class="form-check-label" title="Select all product in list ">
 						                	<input type="checkbox" class="form-check-input" v-model="select_all"> Select All
 						              	</label>
 					            	</div>
 					            	<div class="form-check">
-						              	<label class="form-check-label">
+						              	<label class="form-check-label" title="Show only published product">
 						                	<input type="checkbox" v-model="publish" class="form-check-input"> Show publish
 						              	</label>
                             		</div>
@@ -176,14 +176,29 @@
 
 									<div class="list-group">
 										<template v-for="product in products">
-										 	<a class="px-3 py-1 d-flex justify-content-between list-group-item list-group-item-action" :class="[{'bg-secondary text-white' : checkInArray(product, selectedProducts)}]" @click="selectItem(product.id)">
+										 	<a class="px-3 py-1 d-flex justify-content-between list-group-item list-group-item-action" :class="[{'bg-secondary text-white' : checkInArray(product, selectedProducts)}]" @click="selectItem(product.id)" :title="product.name">
 										    	<span v-html="product.text_sort"></span>
 										    	<button v-if="checkInArray(product, selectedProducts)" class="btn btn-danger btn-icon btn-sm" style="width:25px!important; height: 25px!important;"><span class="mdi mdi-delete"></span></button>
 										  	</a>
 										</template>
 									</div>
 
-									<p style="margin-top:10px">Page @{{paginate.currentPage}} of @{{ paginate.lastPage}}</p>
+									<div class="d-flex justify-content-between">
+										<p style="margin-top:15px">Page @{{paginate.currentPage}} of @{{ paginate.lastPage}}</p>
+										{{-- <div class="form-check">
+		                            		<label class="form-check-label" title="Salect All product">
+							                	<input type="checkbox" class="form-check-input" name="choose_all"> Choose All Product
+							              	</label>
+
+						            	</div> --}}
+
+						            	<select class="form-control w-50" name="choose_all" style="margin-top:10px">
+						            		<option value="">- Bulk Selection -</option>
+						            		<option value="all">- All Product -</option>
+						            		<option value="publish">- Published Only -</option>
+						            		<option value="deselect">- Deselect All -</option>
+						            	</select>
+									</div>
 									<nav aria-label="Page navigation example" style="margin-top:10px">
 									 	<ul class="pagination">
 									    	<li class="page-item" :class="[{'d-none' : paginate.currentPage == 1}]" ><a class="page-link"@click="goTo(paginate.currentPage - 1)"><i data-feather="chevron-left"></i></a></li>
@@ -200,23 +215,6 @@
 									</template>
                             	</div>
                             </div>
-                            {{-- <div class="px-2 pb-2">
-	                            <input type="text" x-ref="category" id="cat-src" class="form-control" placeholder="Search Product">
-	                        </div>
-	                        <div class="d-flex justify-content-between">
-					            <div class="form-check">
-					              	<label for="chkSelectAll" class="form-check-label">
-					                	<input type="checkbox" class="form-check-input" name="chkSelectAll" id="chkSelectAll"> Select All
-					              	</label>
-					            </div>
-		                        <div class="form-check">
-					              	<label class="form-check-label">
-					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Show publish
-					              	</label>
-					            </div>
-	                        </div>
-                            <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
-                            <div id="prod-holder"></div> --}}
                         </div>
                     </div>
 				</div>
