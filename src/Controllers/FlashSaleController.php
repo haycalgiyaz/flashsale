@@ -150,13 +150,14 @@ class FlashSaleController extends Controller
         }
 
         $json = ProductCollection::collection($data);
-        return response([
-            'success' => true,
-            'products' => $json
-        ]);
+        return response()->json($json);
+        
+        // return response([
+        //     'success' => true,
+        //     'products' => $json
+        // ]);
 
         // $json = ProductCollection::collection($data);
-        return response()->json($json);
     }
 
     public function getProductList(Request $request, $id = null)
