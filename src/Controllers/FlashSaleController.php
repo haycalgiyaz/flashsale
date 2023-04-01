@@ -119,6 +119,8 @@ class FlashSaleController extends Controller
                 $flash->products()->sync($request->products);
             }
 
+            dd($flash->products);
+
         } catch (\Exception $e) {
             dd(($e->getMessage()));
         }
@@ -139,11 +141,21 @@ class FlashSaleController extends Controller
 
         $data = $data->get();
 
-        $data = $data->sortBy(function ($product, $key) {
-            return $product->flashsale_count;
-        });
+        // $data = $data->sortBy(function ($product, $key) {
+        //     return $product->flashsale_count;
+        // });
+
+        if ($request->has('search')) {
+            $data = $data->where('name', 'like', '%'.$request->search.'%');
+        }
 
         $json = ProductCollection::collection($data);
+        return response([
+            'success' => true,
+            'products' => $json
+        ]);
+
+        // $json = ProductCollection::collection($data);
         return response()->json($json);
     }
 

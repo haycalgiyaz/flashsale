@@ -8,5 +8,4 @@
 	Route::get('flash-sale/form/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@form');
 	Route::post('flash-sale/form/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@doForm');
 	Route::get('flash-sale/tree/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@productsTree');
-	Route::get('flash-sale/product/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@getProductList');
 

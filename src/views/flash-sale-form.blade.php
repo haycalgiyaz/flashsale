@@ -143,7 +143,7 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="form-group">
-                        <div class="col-xs-12">
+                        {{-- <div class="col-xs-12">
                             <label for="product-tree">Choose Product</label>
                             <div >
                             	<div class="d-flex justify-content-between">
@@ -185,12 +185,6 @@
 
 									<div class="d-flex justify-content-between">
 										<p style="margin-top:15px">Page @{{paginate.currentPage}} of @{{ paginate.lastPage}}</p>
-										{{-- <div class="form-check">
-		                            		<label class="form-check-label" title="Salect All product">
-							                	<input type="checkbox" class="form-check-input" name="choose_all"> Choose All Product
-							              	</label>
-
-						            	</div> --}}
 
 						            	<select class="form-control w-50" name="choose_all" style="margin-top:10px">
 						            		<option value="">- Bulk Selection -</option>
@@ -215,6 +209,25 @@
 									</template>
                             	</div>
                             </div>
+                        </div> --}}
+                        <div class="col-xs-12">
+                        	<div class="px-2 pb-2">
+	                            <input type="text" x-ref="category" id="cat-src" class="form-control" placeholder="Search Product">
+	                        </div>
+	                        <div class="d-flex justify-content-between">
+					            <div class="form-check">
+					              	<label for="chkSelectAll" class="form-check-label">
+					                	<input type="checkbox" class="form-check-input" name="chkSelectAll" id="chkSelectAll"> Select All
+					              	</label>
+					            </div>
+		                        <div class="form-check">
+					              	<label class="form-check-label">
+					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Show publish
+					              	</label>
+					            </div>
+	                        </div>
+                            <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
+                            <div id="prod-holder"></div>
                         </div>
                     </div>
 				</div>
@@ -310,34 +323,34 @@
 		        },
 		    });
 
-		    // $("#form").on('submit',function(e){
-	        //     e.preventDefault();
-	        //     var selectedCategories = [];
+		    $("#form").on('submit',function(e){
+	            e.preventDefault();
+	            var selectedCategories = [];
 
-	        //     //handle categories
+	            //handle categories
 
-	        //     var categories = $("#product-tree").jstree("get_selected",true);
-	        //     $.each(categories,function(index,val){
-	        //         selectedCategories.push(val.id);
-	        //         // if(val.parent != '#') // index == 0 &&
-	        //         // {
-	        //         //     selectedCategories.push(val.parent);
-	        //         // }
-	        //         //
-	        //         // if(selectedCategories.indexOf(val.id) == -1)
-	        //         // {
-	        //         //     selectedCategories.push(val.id);
-	        //         // }
+	            var categories = $("#product-tree").jstree("get_selected",true);
+	            $.each(categories,function(index,val){
+	                selectedCategories.push(val.id);
+	                // if(val.parent != '#') // index == 0 &&
+	                // {
+	                //     selectedCategories.push(val.parent);
+	                // }
+	                //
+	                // if(selectedCategories.indexOf(val.id) == -1)
+	                // {
+	                //     selectedCategories.push(val.id);
+	                // }
 
-	        //     });
+	            });
 
-	        //     $.each(selectedCategories,function(index,val){
-	        //         $('#prod-holder').append('<input type="hidden" name="products[]" value="'+val+'" />');
-	        //     });
+	            $.each(selectedCategories,function(index,val){
+	                $('#prod-holder').append('<input type="hidden" name="products[]" value="'+val+'" />');
+	            });
 
-	        //     $('#form').off('submit');
-	        //     $(this).submit();
-	        // });
+	            $('#form').off('submit');
+	            $(this).submit();
+	        });
 
 	        $('#type').on('change', function() {
 	        	console.log('here');
@@ -352,7 +365,7 @@
 		});
     </script>
 
-	<script>
+{{-- 	<script>
 	  	const { createApp } = Vue
 
 	  	createApp({
@@ -481,5 +494,5 @@
 	    	}
 
 	  	}).mount('#app')
-	</script>
+	</script> --}}
 @endsection
