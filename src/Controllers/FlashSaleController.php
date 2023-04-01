@@ -178,10 +178,12 @@ class FlashSaleController extends Controller
         $products = $products->orderBy('flashsale_count', 'desc')->paginate($limit);
 
         $json = new ProductPaginationResource($products);
-        return response([
-            'success' => true,
-            'products' => $json
-        ]);
+
+        return response($json);
+        // return response([
+        //     'success' => true,
+        //     'products' => $json
+        // ]);
     }
 
     public function create()
