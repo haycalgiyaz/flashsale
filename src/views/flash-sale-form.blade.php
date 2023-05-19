@@ -220,43 +220,47 @@
 				<div class="card-body">
 					<div class="form-group">
                         <div class="col-xs-12">
-                        	{{-- <div class="px-2 pb-2"> --}}
-	                            <input type="text" class="form-control" placeholder="Search Product" v-model="search">
-	                        {{-- </div> --}}
-	                        
-	                        
-					            
-					        {{-- Product Area --}}
-	                        <div class="mt-1" v-if="products.length > 0">
-	                        	<ul class="list-group ">
-								 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
-								  	<template v-for="product in products">
-								  		<li :class="'list-group-item d-flex justify-content-between' + classActive(product)" @click="select(product)">
-								  			@{{product.name}}
-								  		</li>
-								  	</template>
-								</ul>
-	                        </div>
-	                        <div class="mt-1" v-else>
-	                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Please search the product first</p>
+                        	<div class="px-2 pt-2" style="border: 1px solid #bfbfbf">
+	                        	{{-- <div class="px-2 pb-2"> --}}
+		                            <input type="text" class="form-control" placeholder="Search Product" v-model="search">
+		                        {{-- </div> --}}
+
+						        {{-- Product Area --}}
+		                        <div class="mt-1" v-if="products.length > 0">
+		                        	<ul class="list-group ">
+									 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
+									  	<template v-for="product in products">
+									  		<li :class="'list-group-item d-flex justify-content-between' + classActive(product)" @click="select(product)">
+									  			@{{product.name}}
+									  		</li>
+									  	</template>
+									</ul>
+		                        </div>
+		                        <div class="mt-1" v-else>
+		                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Please search the product first</p>
+		                        </div>
+
+		                        <div class="d-flex justify-content-end">
+			                        <div class="form-check">
+						              	<label class="form-check-label mr-2 p-1">
+						                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly" v-model="publish"> Show publish only
+						              	</label>
+						            </div>
+			                        <div class="form-check">
+			                        	<button class="btn btn-sm btn-primary" type="button" @click="selectAll" :disabled="products.length == 0">
+			                        		Select all product
+			                        	</button>
+						            </div>
+
+		                        </div>
+                        	</div>
+
+
+	                        <div class="d-flex justify-content-between mb-2 mt-4">
+	                        	<b>Selected Products</b>
+	                        	<b>(@{{ selectedProducts.length }}) Product(s) are selected</b>
 	                        </div>
 
-	                        <div class="d-flex justify-content-end">
-		                        <div class="form-check">
-					              	<label class="form-check-label mr-2 p-1">
-					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly" v-model="publish"> Show publish only
-					              	</label>
-					            </div>
-		                        <div class="form-check">
-		                        	<button class="btn btn-sm btn-primary" type="button" @click="selectAll" :disabled="products.length == 0">
-		                        		Select all product
-		                        	</button>
-					            </div>
-
-	                        </div>
-
-	                        <hr>
-	                        <b>Selected Products</b>
 	                        <div class="" v-if="selectedProducts.length > 0">
 	                        	<ul class="list-group">
 								 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
