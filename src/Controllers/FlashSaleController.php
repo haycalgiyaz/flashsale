@@ -83,7 +83,6 @@ class FlashSaleController extends Controller
 
     public function doForm(Request $request, $id = null)
     {
-        // dd($request->all());
         try {
             if ($id) {
                 $flash = FlashSale::where('id', $id)->first();
@@ -96,8 +95,19 @@ class FlashSaleController extends Controller
             $flash->type = $request->type;
             $flash->user_level = $request->user_level;
             $flash->minimum_qty = $request->minimum_qty;
+
+            // discount ammount
+            $flash->is_discount_ammount = ($request->is_discount_ammount == 'on' ? 1 : 0);
             $flash->discount_percent = ($request->discount_percent ? $request->discount_percent : 0);
             $flash->discount_price = ($request->discount_price ? $request->discount_price : 0);
+            $flash->maximum_discount = ($request->maximum_discount ? $request->maximum_discount : 0);
+            // discount ongkir
+            $flash->is_discount_ongkir = ($request->is_discount_ongkir == 'on' ? 1 : 0);
+            $flash->discount_ongkir_price = $request->discount_ongkir_price;
+            $flash->discount_ongkir_percent = $request->discount_ongkir_percent;
+            $flash->is_free_ongkir = ($request->is_free_ongkir == 'on' ? 1 : 0);
+            $flash->maximum_ongkir_discount = ($request->maximum_ongkir_discount ? $request->maximum_ongkir_discount : 0);
+
             $flash->is_publish = ($request->input('is_publish') ? 1 : 0);
             $flash->published_at = date('Y-m-d H:i:s', strtotime($request->input('pdate')));
             $flash->ended_at = date('Y-m-d H:i:s', strtotime($request->input('edate')));
@@ -160,7 +170,7 @@ class FlashSaleController extends Controller
 
     public function getProductList(Request $request, $id = null)
     {
-        $limit = $request->has('limit') ? $request->limit : 15;
+        $limit = $request->has('limit') ? $request->limit : 10;
 
         $products = Product::withCount(['flashsale' => function($q) use ($id){
             $q->where('flash_sale_id', $id);
@@ -174,15 +184,15 @@ class FlashSaleController extends Controller
             $products = $products->where('name', 'like', '%'.$request->search.'%');
         }
 
-        $products = $products->orderBy('flashsale_count', 'desc')->paginate($limit);
+        // $products = $products->orderBy('flashsale_count', 'desc')->paginate($limit);
+        $products = $products->orderBy('flashsale_count', 'desc')->take($limit)->get();
 
-        $json = new ProductPaginationResource($products);
+        $json = ProductCollection::collection($products);
 
-        return response($json);
-        // return response([
-        //     'success' => true,
-        //     'products' => $json
-        // ]);
+        return response([
+            'success' => true,
+            'products' => $json
+        ]);
     }
 
     public function create()

@@ -2,6 +2,37 @@
 
 @section('title', 'Flash Sale')
 
+@php
+ $selectedProduct = [];
+ foreach ($flashsale->products as $key => $value) {
+ 	array_push($selectedProduct, [
+ 		'id' => $value->id,
+ 		'name' => $value->name,
+ 		'is_publish' => $value->is_publish,
+ 		'selected' => 1
+ 	]);
+ }
+
+ $flash_sale = [
+ 	'id' => $flashsale->id,
+ 	'name' => $flashsale->name,
+ 	'discount_price' => $flashsale->discount_price,
+ 	'discount_percent' => $flashsale->discount_percent,
+ 	'user_level' => $flashsale->user_level,
+ 	'is_publish' => $flashsale->is_publish,
+ 	'published_at' => $flashsale->published_at,
+ 	'ended_at' => $flashsale->ended_at,
+ 	'minimum_qty' => $flashsale->minimum_qty,
+ 	'is_discount_ammount' => $flashsale->is_discount_ammount,
+ 	'is_discount_ongkir' => $flashsale->is_discount_ongkir,
+ 	'discount_ongkir_price' => $flashsale->discount_ongkir_price,
+ 	'discount_ongkir_percent' => $flashsale->discount_ongkir_percent,
+ 	'is_free_ongkir' => $flashsale->is_free_ongkir,
+ 	'maximum_discount' => $flashsale->maximum_discount,
+ 	'maximum_ongkir_discount' => $flashsale->maximum_ongkir_discount,
+ ];
+
+@endphp
 @section('plugin-styles')
 <link href="{{ asset('assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
@@ -25,14 +56,14 @@
 	<div class="row" id="app">
 		
 		<div class="col-md-6 grid-margin stretch-card">
-			<div class="card" style="max-height: 640px;">
+			<div class="card">
 				<div class="card-body" >
 					{{-- <h4 class="mb-4">General Information</h4> --}}
 	                <div class="row">
                     	<div class="col-md-12">
 	                        <div class="form-group">
 	                            <label for="name">Name</label>
-	                            <input class="form-control" id="name" type="text" name="name" placeholder="Enter Name" required value="{{ $flashsale->name }}" />
+	                            <input class="form-control" id="name" type="text" name="name" v-model="flash_sale.name" placeholder="Enter Name" required />
 	                        </div>
                     	</div>
                     </div>
@@ -40,18 +71,15 @@
                     	<div class="col-md-12">
 	                        <div class="form-group">
 	                            <label for="excerpt">Excerpt</label>
-	                            <textarea class="form-control" name="excerpt" placeholder="Ringkasan Deskripsi" >{{$flashsale->excerpt}}</textarea>
+	                            <textarea class="form-control" name="excerpt" placeholder="Ringkasan Deskripsi" v-model="flash_sale.excerpt"></textarea>
 	                        </div>
                     	</div>
                     </div>
                     <div class="row">
                     	<div class="col-md-12">
 	                        <div class="form-group">
-	                            <label for="excerpt">Discount Type</label>
-	                            <select class="form-control" name="type" id="type">
-	                            	<option value="DISCOUNT" {{ $flashsale->type == 'DISCOUNT' ? 'selected' : '' }}>DISCOUNT</option>
-	                            	<option value="FREE_ONGKIR" {{ $flashsale->type == 'FREE_ONGKIR' ? 'selected' : '' }}>FREE ONGKIR</option>
-	                            </select>
+	                            <label for="name">Minimum Qty</label>
+	                              <input type="number" name="minimum_qty" class="form-control" id="minimum_qty" placeholder="1" v-model="flash_sale.minimum_qty">
 	                        </div>
                     	</div>
                     </div>
@@ -67,28 +95,76 @@
 	                        </div>
                     	</div>
                     </div>
-                    <div class="row">
-                    	<div class="col-md-12">
-	                        <div class="form-group">
-	                            <label for="name">Minimum Qty</label>
-	                              <input type="number" name="minimum_qty" class="form-control" id="minimum_qty" placeholder="1" value="{{ $flashsale->minimum_qty }}">
-	                        </div>
-                    	</div>
+
+                    <div class="p-2" style="border: 1px solid #a9b5c9;">
+	                    <div class="row">
+	                    	<div class="col-md-12 mt-0">
+	                    		<div class="form-group mb-0" style="height: 20px;">
+	                    			<input type="checkbox" name="is_discount_ammount" v-model="flash_sale.is_discount_ammount" class="mr-1 my-auto" id="disc_price">
+	                    			<label for="disc_price" style="font-weight: bold;">Discount Price</label>	
+	                    		</div>
+	                    	</div>
+	                    </div>
+	                    
+	                    <div class="row mt-2 px-4 py-2" v-if="flash_sale.is_discount_ammount">
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="discount_price">Discount (IDR)</label>
+		                            <input type="number" name="discount_price" class="form-control" id="discount_price" placeholder="10000" v-model="flash_sale.discount_price">
+		                        </div>
+		                    </div>
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="discount_percent">Discount (%)</label>
+		                            <input type="number" name="discount_percent" class="form-control" id="discount_percent" placeholder="10" v-model="flash_sale.discount_percent">
+		                        </div>
+		                    </div>
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="maximum_discount">Maximum Discount</label>
+		                            <input type="number" name="maximum_discount" class="form-control" id="maximum_discount" placeholder="10" v-model="flash_sale.maximum_discount">
+		                        </div>
+		                    </div>
+		                </div>
                     </div>
-                    <div class="row" id="discount_value" {{ $flashsale->type == 'FREE_ONGKIR' ? "style=display:none" : '' }} >
-	                    <div class="col-6">
-	                    	<div class="form-group">
-	                            <label for="discount_price">Discount (IDR)</label>
-	                            <input type="number" name="discount_price" class="form-control" id="discount_price" placeholder="10000" value="{{ $flashsale->discount_price }}">
-	                        </div>
+
+                    <div class="p-2 mt-3 mb-2" style="border: 1px solid #a9b5c9;">
+		                <div class="row">
+	                    	<div class="col-md-12 mt-0">
+	                    		<div class="form-group m-0" style="height: 20px">
+	                    			<input type="checkbox" name="is_discount_ongkir" v-model="flash_sale.is_discount_ongkir" class="mr-1" id="showShipping">
+	                    			<label for="showShipping" style="font-weight: bold">Discount Shipping</label>	
+	                    		</div>
+	                    	</div>
 	                    </div>
-	                    <div class="col-6">
-	                    	<div class="form-group">
-	                            <label for="discount_percent">Discount (%)</label>
-	                            <input type="number" name="discount_percent" class="form-control" id="discount_percent" placeholder="10" value="{{ $flashsale->discount_percent }}">
-	                        </div>
-	                    </div>
-	                </div>
+
+	                    <div class="row mt-2 px-4 py-2" v-if="flash_sale.is_discount_ongkir">
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="discount_ongkir_price">Discount Ongkir (IDR)</label>
+		                            <input type="number" name="discount_ongkir_price" class="form-control" id="discount_ongkir_price" placeholder="10000" v-model="flash_sale.discount_ongkir_price">
+		                        </div>
+		                    </div>
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="discount_ongkir_percent">Discount Ongkir (%)</label>
+		                            <input type="number" name="discount_ongkir_percent" class="form-control" id="discount_ongkir_percent" placeholder="10" v-model="flash_sale.discount_ongkir_percent">
+		                        </div>
+		                    </div>
+		                    <div class="col-6">
+		                    	<div class="form-group">
+		                            <label for="maximum_ongkir_discount">Maximum Discount</label>
+		                            <input type="number" name="maximum_ongkir_discount" class="form-control" id="maximum_ongkir_discount" placeholder="10" v-model="flash_sale.maximum_ongkir_discount">
+		                        </div>
+		                    </div>
+		                    <div class="col-6" style="margin: auto;">
+		                    	<div class="form-group mb-0" style="height: 15px">
+		                            <label for="discount_ongkir_percent mb-0">Free Ongkir</label>
+		                            <input type="checkbox" name="is_free_ongkir" v-model="flash_sale.is_free_ongkir" class="ml-2">
+		                        </div>
+		                    </div>
+		                </div>
+                    </div>
 
                     {{-- <div class="row mt-2"> --}}
                     	<div class="row">
@@ -143,91 +219,61 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="form-group">
-                        {{-- <div class="col-xs-12">
-                            <label for="product-tree">Choose Product</label>
-                            <div >
-                            	<div class="d-flex justify-content-between">
-                            		<div class="form-group">
-                            			<select class="form-control" v-model="limit" title="Show List">
-                            				<option>15</option>
-                            				<option>25</option>
-                            				<option>50</option>
-                            				<option>100</option>
-                            			</select>
-                            		</div>
-					            	<div class="form-check">
-	                            		<label class="form-check-label" title="Select all product in list ">
-						                	<input type="checkbox" class="form-check-input" v-model="select_all"> Select All
-						              	</label>
-					            	</div>
-					            	<div class="form-check">
-						              	<label class="form-check-label" title="Show only published product">
-						                	<input type="checkbox" v-model="publish" class="form-check-input"> Show publish
-						              	</label>
-                            		</div>
-                            	</div>
-                            	<div class="list-area">
-									<div class="form-group">
-										<input type="text" v-model="search" class="form-control" placeholder="Type to search">
-									</div>
-									<div class="d-flex justify-content-end">
-										<span v-if="selectedProducts.length > 0">@{{ selectedProducts.length }} Products Selected</span>
-									</div>
-
-									<div class="list-group">
-										<template v-for="product in products">
-										 	<a class="px-3 py-1 d-flex justify-content-between list-group-item list-group-item-action" :class="[{'bg-secondary text-white' : checkInArray(product, selectedProducts)}]" @click="selectItem(product.id)" :title="product.name">
-										    	<span v-html="product.text_sort"></span>
-										    	<button v-if="checkInArray(product, selectedProducts)" class="btn btn-danger btn-icon btn-sm" style="width:25px!important; height: 25px!important;"><span class="mdi mdi-delete"></span></button>
-										  	</a>
-										</template>
-									</div>
-
-									<div class="d-flex justify-content-between">
-										<p style="margin-top:15px">Page @{{paginate.currentPage}} of @{{ paginate.lastPage}}</p>
-
-						            	<select class="form-control w-50" name="choose_all" style="margin-top:10px">
-						            		<option value="">- Bulk Selection -</option>
-						            		<option value="all">- All Product -</option>
-						            		<option value="publish">- Published Only -</option>
-						            		<option value="deselect">- Deselect All -</option>
-						            	</select>
-									</div>
-									<nav aria-label="Page navigation example" style="margin-top:10px">
-									 	<ul class="pagination">
-									    	<li class="page-item" :class="[{'d-none' : paginate.currentPage == 1}]" ><a class="page-link"@click="goTo(paginate.currentPage - 1)"><i data-feather="chevron-left"></i></a></li>
-									    	<template v-for="i in paginate.pages" :index="i">
-									    		<li class="page-item " :class="[{ 'active' : i === paginate.currentPage }]"><a class="page-link" @click="goTo(i)">@{{ i }}</a></li>
-									    	</template>
-
-									    	<li class="page-item" v-if="paginate.currentPage !=  paginate.lastPage"><a class="page-link" @click="goTo(paginate.currentPage + 1)"><i data-feather="chevron-right"></i></a></li>
-									  	</ul>
-									</nav>
-
-									<template v-for="product in selectedProducts">
-										<input type="hidden" name="products[]" :value="product">
-									</template>
-                            	</div>
-                            </div>
-                        </div> --}}
                         <div class="col-xs-12">
-                        	<div class="px-2 pb-2">
-	                            <input type="text" x-ref="category" id="cat-src" class="form-control" placeholder="Search Product">
+                        	{{-- <div class="px-2 pb-2"> --}}
+	                            <input type="text" class="form-control" placeholder="Search Product" v-model="search">
+	                        {{-- </div> --}}
+	                        
+	                        
+					            
+					        {{-- Product Area --}}
+	                        <div class="mt-1" v-if="products.length > 0">
+	                        	<ul class="list-group ">
+								 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
+								  	<template v-for="product in products">
+								  		<li :class="'list-group-item d-flex justify-content-between' + classActive(product)" @click="select(product)">
+								  			@{{product.name}}
+								  		</li>
+								  	</template>
+								</ul>
 	                        </div>
-	                        <div class="d-flex justify-content-between">
-					            <div class="form-check">
-					              	<label for="chkSelectAll" class="form-check-label">
-					                	<input type="checkbox" class="form-check-input" name="chkSelectAll" id="chkSelectAll"> Select All
+	                        <div class="mt-1" v-else>
+	                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Please search the product first</p>
+	                        </div>
+
+	                        <div class="d-flex justify-content-end">
+		                        <div class="form-check">
+					              	<label class="form-check-label mr-2 p-1">
+					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly" v-model="publish"> Show publish only
 					              	</label>
 					            </div>
 		                        <div class="form-check">
-					              	<label class="form-check-label">
-					                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly"> Show publish
-					              	</label>
+		                        	<button class="btn btn-sm btn-primary" type="button" @click="selectAll" :disabled="products.length == 0">
+		                        		Select all product
+		                        	</button>
 					            </div>
+
 	                        </div>
-                            <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
-                            <div id="prod-holder"></div>
+
+	                        <hr>
+	                        <b>Selected Products</b>
+	                        <div class="" v-if="selectedProducts.length > 0">
+	                        	<ul class="list-group">
+								 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
+								  	<template v-for="product in selectedProducts">
+								  		<li class="list-group-item d-flex justify-content-between" @click="deleteSelectedProduct(product)">
+								  			@{{product.name}}
+								  			<input type="hidden" name="products[]" :value="product.id">
+								  			<i class="fa fa-trash"></i>
+								  		</li>
+								  	</template>
+								</ul>
+	                        </div>
+	                        <div v-else>
+	                        	<p class="text-center p-3" style="background-color: #d9d9d9;">No product are selected</p>
+	                        </div>
+                            {{-- <div id="product-tree" style="overflow-y:scroll; overflow-x:scroll; max-height: 500px;"></div>
+                            <div id="prod-holder"></div> --}}
                         </div>
                     </div>
 				</div>
@@ -258,7 +304,7 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.1/dist/alpine.min.js" defer></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
     	$(function(){
     		var param = '?publish=0';
     		var treeUrl = '{{ url("flash-sale/tree/".$flashsale->id) }}';
@@ -363,9 +409,25 @@
 	        	}
 	        })
 		});
-    </script>
+    </script> --}}
+	<script>
+		var  stored_product = JSON.parse('@json($selectedProduct)');
+		var  flashSale = JSON.parse('@json($flash_sale)');
 
-{{-- 	<script>
+    	$(function(){
+			$('.date-time').each(function() {
+	            $('#datetimepicker').datetimepicker({
+	                format: 'DD-MM-YYYY HH:mm',
+	                defaultDate: $('#datetimepicker').data('date'),
+	            });
+
+	            $('#datetimepicker1').datetimepicker({
+	                format: 'DD-MM-YYYY HH:mm',
+	                defaultDate: $('#datetimepicker1').data('date'),
+	            });
+	        });
+    	});
+
 	  	const { createApp } = Vue
 
 	  	createApp({
@@ -373,33 +435,70 @@
 	     		return {
 	     			selectedProducts: [],
 	     			products: [],
-	     			paginate:{
-	     				currentPage: 1,
-	     				pages: [],
-	     				lastPage: 0,
-	     				total: 0
-	     			},
 	     			limit: 15,
 	        		search: '',
 	        		publish: false,
 	        		select_all: false,
+	        		show_discount_price: false,
+	        		show_discount_ongkir: false,
+	     			flash_sale : {
+	     				id : null,
+					 	name : null,
+					 	discount_price : null,
+					 	discount_percent : null,
+					 	user_level : null,
+					 	is_publish : null,
+					 	published_at : null,
+					 	ended_at : null,
+					 	minimum_qty : null,
+					 	is_discount_ammount : true,
+					 	is_discount_ongkir : true,
+					 	discount_ongkir_price : null,
+					 	discount_ongkir_percent : null,
+					 	is_free_ongkir : null,
+					 	maximum_discount : null,
+					 	maximum_ongkir_discount : null,
+	     			},
 	      		}
 	    	},
 	    	mounted(){
-	    		this.getListProduct()
+	    		// this.getListProduct()
+	    		this.selectedProducts = stored_product;
+	    		this.flash_sale.id = flashSale.id;
+				this.flash_sale.name = flashSale.name;
+				this.flash_sale.discount_price = flashSale.discount_price;
+				this.flash_sale.discount_percent = flashSale.discount_percent;
+				this.flash_sale.user_level = flashSale.user_level;
+				this.flash_sale.is_publish = flashSale.is_publish;
+				this.flash_sale.published_at = flashSale.published_at;
+				this.flash_sale.ended_at = flashSale.ended_at;
+				this.flash_sale.minimum_qty = flashSale.minimum_qty;
+
+				// this.flash_sale.is_discount_ammount = flashSale.is_discount_ammount;
+				// this.flash_sale.is_discount_ongkir = flashSale.is_discount_ongkir;
+				if (flashSale.is_discount_ammount) {
+					this.flash_sale.is_discount_ammount = true;
+				}
+				if (flashSale.is_discount_ongkir) {
+					this.flash_sale.is_discount_ongkir = true;
+				}
+				if (flashSale.is_free_ongkir) {
+					this.flash_sale.is_free_ongkir = true;
+				}
+				this.flash_sale.discount_ongkir_price = flashSale.discount_ongkir_price;
+				this.flash_sale.discount_ongkir_percent = flashSale.discount_ongkir_percent;
+				this.flash_sale.maximum_discount = flashSale.maximum_discount;
+				this.flash_sale.maximum_ongkir_discount = flashSale.maximum_ongkir_discount;
 	    	},
 			watch: {
 				search: function(newData, oldData) {
 					if (newData.length > 2) {
-	    				this.paginate.currentPage = 1;
 						this.getListProduct();
-					}else if(newData.length == 0){
-						this.paginate.currentPage = 1;
-						this.getListProduct();
+					}else{
+						this.products = []
 					}
 				},
 				publish: function(newData, oldData) {
-					this.paginate.currentPage = 1;
 					this.getListProduct();
 				},
 				select_all: function(newData, oldData) {
@@ -422,7 +521,7 @@
 			},
 	    	methods: {
 	    		async getListProduct() {
-	    			var url = encodeURI(`/flash-sale/product/{{$flashsale->id}}?page=`+this.paginate.currentPage);
+	    			var url = encodeURI(`/flash-sale/products/{{$flashsale->id}}?limit=10`);
 
 	    			if (this.search.length > 2) {
 	    				url += '&search='+this.search;
@@ -430,8 +529,6 @@
 	    			if (this.publish) {
 	    				url += '&publish=1';
 	    			}
-	    			url += '&limit='+this.limit;
-	    			
 
 					await axios({
 						method: 'get',
@@ -439,30 +536,7 @@
 					})
 					.then((r)=>{
 						if (r.data.success) {
-							this.products = r.data.products.items;
-							this.paginate.currentPage = r.data.products.currentPage;
-	     					this.paginate.lastPage = r.data.products.lastPage;
-	     					this.paginate.total = r.data.products.total;
-
-	     					var pages = [];
-
-	     					for (var i = 0; i < r.data.products.items.length; i++) {
-	     						var product = r.data.products.items[i];
-
-	     						if (product.state.selected) {
-									if (!this.selectedProducts.includes(product.id)) {
-										this.selectedProducts.push(product.id);
-										console.log('run')
-									}
-	     						}
-	     					}
-
-	     					for (var i = this.paginate.currentPage - 2; i <= this.paginate.currentPage+2; i++) {
-	     						if (i > 0 && i <= this.paginate.lastPage) {
-	     							pages.push(i)
-	     						}
-	     					}
-	     					this.paginate.pages = pages;
+							this.products = r.data.products;
 						}
 					})
 					.catch()
@@ -470,29 +544,42 @@
 				showPublish(){
 					console.log('here');
 				},
+				select(product){
+					if (!this.checkSelected(product)) {
+						this.selectedProducts.push({
+							id:product.id,
+							name:product.name
+						});
+					}
+				},
+				deleteSelectedProduct(product){
+					if (this.checkSelected(product)) {
+						this.selectedProducts.splice(this.selectedProducts.findIndex(e => e.id === product.id), 1)
+					}
+				},
 				selectAll(){
-					
+					for (var i = this.products.length - 1; i >= 0; i--) {
+						this.select(this.products[i]);
+					}
 				},
-				checkInArray(item, dataArr){
-					return dataArr.includes(item.id);
-				},
-				selectItem(i){
-					if (this.selectedProducts.includes(i)) {
-						const index = this.selectedProducts.indexOf(i);
-						if (index > -1) {
-						 	this.selectedProducts.splice(index, 1); 
-						}
+				classActive(product){
+					if (this.checkSelected(product)) {
+						return ' active'
 					}else{
-						this.selectedProducts.push(i)
+						return ''
 					}
 
 				},
-				goTo(i){
-					this.paginate.currentPage = i;
-					this.getListProduct()
+				checkSelected(product){
+					if (this.selectedProducts.find(e => e.id === product.id)) {
+						return true;
+					}else{
+						return false;
+					}
 				}
+
 	    	}
 
 	  	}).mount('#app')
-	</script> --}}
+	</script>
 @endsection
