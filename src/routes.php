@@ -4,6 +4,7 @@
 // Route::get('testing', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@testing');
 	Route::get('flash-sale', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@index');
 	Route::post('flash-sale', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@destroy');
+	Route::get('flash-sale/products/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@getProductList');
 	Route::get('flash-sale/datatable', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@datatable');
 	Route::get('flash-sale/form/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@form');
 	Route::post('flash-sale/form/{id?}', 'Haycalgiyaz\Flashsale\Controllers\FlashSaleController@doForm');
