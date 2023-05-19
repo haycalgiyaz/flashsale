@@ -554,6 +554,8 @@
 							id:product.id,
 							name:product.name
 						});
+					}else{
+						this.selectedProducts.splice(this.selectedProducts.findIndex(e => e.id === product.id), 1)
 					}
 				},
 				deleteSelectedProduct(product){
