@@ -41,7 +41,16 @@
 <style>
 	.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
 .toggle.ios .toggle-handle { border-radius: 20rem; }
-
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-prime{
+  background-color: #009933;
+}
 </style>
 @endsection
 
@@ -234,10 +243,12 @@
 
 									 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
 									  	<template v-for="product in products">
-									  		<li :class="'list-group-item d-flex justify-content-between' + classActive(product)" @click="select(product)">
+									  		<li :class="'list-group-item d-flex' + classActive(product)" @click="select(product)">
+									  			<div class="pr-2">
+										  			<span class="dot dot-prime" v-if="product.is_publish"></span>
+										  			<span class="dot" v-else></span>
+									  			</div>
 									  			@{{product.name}} 
-									  			<span class="badge badge-success" v-if="product.is_publish">Publish</span>
-									  			<span class="badge badge-dark" v-else>Unpublish</span>
 									  		</li>
 									  	</template>
 									</ul>
@@ -276,10 +287,14 @@
 	                        	<ul class="list-group">
 								 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
 								  	<template v-for="product in selectedProducts">
-								  		<li class="list-group-item d-flex justify-content-between" @click="deleteSelectedProduct(product)">
+								  		<li class="list-group-item d-flex" @click="deleteSelectedProduct(product)">
+								  			<div class="pr-2">
+									  			<span class="dot dot-prime" v-if="product.is_publish"></span>
+									  			<span class="dot" v-else></span>
+								  			</div>
 								  			@{{product.name}}
 								  			<input type="hidden" name="products[]" :value="product.id">
-								  			<i class="fa fa-trash"></i>
+								  			<i class="fa fa-trash ml-auto"></i>
 								  		</li>
 								  	</template>
 								</ul>
@@ -450,7 +465,7 @@
 	     		return {
 	     			selectedProducts: [],
 	     			products: [],
-	     			limit: 15,
+	     			limit: 50,
 	        		search: '',
 	        		publish: false,
 	        		select_all: false,
@@ -521,6 +536,9 @@
 				},
 				category: function(newData, oldData) {
 					if (this.search.length > 2) {
+						if (newData) {
+							this.limit = 500;
+						}
 						this.getListProduct();
 					}
 				},
@@ -544,7 +562,7 @@
 			},
 	    	methods: {
 	    		async getListProduct() {
-	    			var url = encodeURI(`/flash-sale/products/{{$flashsale->id}}?limit=50`);
+	    			var url = encodeURI(`/flash-sale/products/{{$flashsale->id}}?limit=`+this.limit);
 
 	    			if (this.search.length > 2) {
 	    				url += '&search='+this.search;
