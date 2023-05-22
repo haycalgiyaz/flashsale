@@ -181,7 +181,15 @@ class FlashSaleController extends Controller
         }
 
         if ($request->has('search')) {
-            $products = $products->where('name', 'like', '%'.$request->search.'%');
+            $search = $request->search;
+
+            if ($request->has('category') && $request->category) {
+                $products = $products->whereHas('categories',function ($cat) use ($search){
+                    $cat->where('name', 'like', '%'.$search.'%');
+                });
+            }else{
+                $products = $products->where('name', 'like', '%'.$search.'%');
+            }
         }
 
         // $products = $products->orderBy('flashsale_count', 'desc')->paginate($limit);

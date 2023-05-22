@@ -119,12 +119,12 @@
 		                            <input type="number" name="discount_percent" class="form-control" id="discount_percent" placeholder="10" v-model="flash_sale.discount_percent">
 		                        </div>
 		                    </div>
-		                    <div class="col-6">
+		                    {{-- <div class="col-6">
 		                    	<div class="form-group">
 		                            <label for="maximum_discount">Maximum Discount</label>
 		                            <input type="number" name="maximum_discount" class="form-control" id="maximum_discount" placeholder="10" v-model="flash_sale.maximum_discount">
 		                        </div>
-		                    </div>
+		                    </div> --}}
 		                </div>
                     </div>
 
@@ -139,7 +139,7 @@
 	                    </div>
 
 	                    <div class="row mt-2 px-4 py-2" v-if="flash_sale.is_discount_ongkir">
-		                    <div class="col-6">
+		                    {{-- <div class="col-6">
 		                    	<div class="form-group">
 		                            <label for="discount_ongkir_price">Discount Ongkir (IDR)</label>
 		                            <input type="number" name="discount_ongkir_price" class="form-control" id="discount_ongkir_price" placeholder="10000" v-model="flash_sale.discount_ongkir_price">
@@ -156,8 +156,8 @@
 		                            <label for="maximum_ongkir_discount">Maximum Discount</label>
 		                            <input type="number" name="maximum_ongkir_discount" class="form-control" id="maximum_ongkir_discount" placeholder="10" v-model="flash_sale.maximum_ongkir_discount">
 		                        </div>
-		                    </div>
-		                    <div class="col-6" style="margin: auto;">
+		                    </div> --}}
+		                    <div class="col-6">
 		                    	<div class="form-group mb-0" style="height: 15px">
 		                            <label for="discount_ongkir_percent mb-0">Free Ongkir</label>
 		                            <input type="checkbox" name="is_free_ongkir" v-model="flash_sale.is_free_ongkir" class="ml-2">
@@ -228,30 +228,41 @@
 						        {{-- Product Area --}}
 		                        <div class="mt-1" v-if="products.length > 0">
 		                        	<ul class="list-group ">
+		                        		<div class="d-flex justify-content-end">
+		                        			<span>Showing @{{products.length}} Products</span>
+		                        		</div>
+
 									 	{{-- <li class="list-group-item active">Cras justo odio</li> --}}
 									  	<template v-for="product in products">
 									  		<li :class="'list-group-item d-flex justify-content-between' + classActive(product)" @click="select(product)">
-									  			@{{product.name}}
+									  			@{{product.name}} 
+									  			<span class="badge badge-success" v-if="product.is_publish">Publish</span>
+									  			<span class="badge badge-dark" v-else>Unpublish</span>
 									  		</li>
 									  	</template>
 									</ul>
 		                        </div>
+		                        <div class="mt-1" v-else-if="products.length == 0 && search.length > 2">
+		                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Product not found, please check your search again</p>
+		                        </div>
 		                        <div class="mt-1" v-else>
-		                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Please search the product first</p>
+		                        	<p class="text-center p-3" style="background-color: #d9d9d9;">Please type to search the product</p>
 		                        </div>
 
-		                        <div class="d-flex justify-content-end">
-			                        <div class="form-check">
-						              	<label class="form-check-label mr-2 p-1">
-						                	<input type="checkbox" class="form-check-input" name="publish_only" id="chkPublishOnly" v-model="publish"> Show publish only
-						              	</label>
-						            </div>
+		                        <div class="d-flex justify-content-end align-items-center">
+		                        	<div class="form-group mb-0 mr-2" style="height: 20px;">
+						                <input type="checkbox" class="mr-1 my-auto" name="category" id="showCategory" v-model="category"> 
+		                    			<label for="showCategory"><small>By category</small></label>
+		                    		</div>
+		                        	<div class="form-group mb-0 mr-2" style="height: 20px;">
+						                <input type="checkbox" class="mr-1 my-auto" name="publish_only" id="chkPublishOnly" v-model="publish"> 
+		                    			<label for="chkPublishOnly"><small> By publish only</small></label>
+		                    		</div>
 			                        <div class="form-check">
 			                        	<button class="btn btn-sm btn-primary" type="button" @click="selectAll" :disabled="products.length == 0">
 			                        		Select all product
 			                        	</button>
 						            </div>
-
 		                        </div>
                         	</div>
 
@@ -443,6 +454,7 @@
 	        		search: '',
 	        		publish: false,
 	        		select_all: false,
+	        		category: false,
 	        		show_discount_price: false,
 	        		show_discount_ongkir: false,
 	     			flash_sale : {
@@ -503,7 +515,14 @@
 					}
 				},
 				publish: function(newData, oldData) {
-					this.getListProduct();
+					if (this.search.length > 2) {
+						this.getListProduct();
+					}
+				},
+				category: function(newData, oldData) {
+					if (this.search.length > 2) {
+						this.getListProduct();
+					}
 				},
 				select_all: function(newData, oldData) {
 					if (newData) {
@@ -525,13 +544,16 @@
 			},
 	    	methods: {
 	    		async getListProduct() {
-	    			var url = encodeURI(`/flash-sale/products/{{$flashsale->id}}?limit=10`);
+	    			var url = encodeURI(`/flash-sale/products/{{$flashsale->id}}?limit=50`);
 
 	    			if (this.search.length > 2) {
 	    				url += '&search='+this.search;
 	    			}
 	    			if (this.publish) {
 	    				url += '&publish=1';
+	    			}
+	    			if (this.category) {
+	    				url += '&category=1';
 	    			}
 
 					await axios({
