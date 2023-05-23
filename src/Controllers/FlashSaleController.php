@@ -36,14 +36,21 @@ class FlashSaleController extends Controller
                     </div>';
         })
         ->editColumn('discount',function($row){
-            if ($row->type == 'FREE_ONGKIR') {
-                return 'Free Ongkir';
+            $html = [];
+
+            if ($row->is_discount_ammount) {
+                if ($row->discount_percent) {
+                    array_push($html, $row->discount_percent.'%');
+                }else{
+                    array_push($html, 'IDR '.number_format($row->discount_price));
+                }
             }
-            if ($row->discount_price) {
-                return 'Flat IDR '.$row->discount_price;
-            }else{
-                return $row->discount_percent.'%';
+
+            if ($row->is_discount_ongkir) {
+                array_push($html, 'Free Ongkir');
             }
+
+            return implode(' & ', $html);
         })
         ->editColumn('type',function($row){
             if ($row->type == 'FREE_ONGKIR') {
