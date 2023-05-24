@@ -77,7 +77,7 @@ class FlashSaleController extends Controller
         if ($id) {
             $data = FlashSale::where('id', $id)->first();                
         }else{
-            $data = new FlashSale;        
+            $data = new FlashSale;          
         }
 
         if (!$data) {
@@ -102,6 +102,7 @@ class FlashSaleController extends Controller
             $flash->type = $request->type;
             $flash->user_level = $request->user_level;
             $flash->minimum_qty = $request->minimum_qty;
+            $flash->free_ongkir_minimum_qty = $request->free_ongkir_minimum_qty;
 
             // discount ammount
             $flash->is_discount_ammount = ($request->is_discount_ammount == 'on' ? 1 : 0);
@@ -110,15 +111,11 @@ class FlashSaleController extends Controller
             // $flash->maximum_discount = ($request->maximum_discount ? $request->maximum_discount : 0);
             // discount ongkir
             $flash->is_discount_ongkir = ($request->is_discount_ongkir == 'on' ? 1 : 0);
-            // $flash->discount_ongkir_price = $request->discount_ongkir_price;
-            // $flash->discount_ongkir_percent = $request->discount_ongkir_percent;
-            $flash->is_free_ongkir = ($request->is_free_ongkir == 'on' ? 1 : 0);
-            // $flash->maximum_ongkir_discount = ($request->maximum_ongkir_discount ? $request->maximum_ongkir_discount : 0);
+            // $flash->is_free_ongkir = ($request->is_free_ongkir == 'on' ? 1 : 0);
 
             $flash->is_publish = ($request->input('is_publish') ? 1 : 0);
             $flash->published_at = date('Y-m-d H:i:s', strtotime($request->input('pdate')));
             $flash->ended_at = date('Y-m-d H:i:s', strtotime($request->input('edate')));
-            
             $flash->save();
 
             if ($request->choose_all) {

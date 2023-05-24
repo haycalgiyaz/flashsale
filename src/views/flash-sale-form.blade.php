@@ -24,11 +24,11 @@ $flash_sale = [
 	'published_at' => $flashsale->published_at,
 	'ended_at' => $flashsale->ended_at,
 	'minimum_qty' => $flashsale->minimum_qty,
+	'free_ongkir_minimum_qty' => $flashsale->free_ongkir_minimum_qty,
 	'is_discount_ammount' => $flashsale->is_discount_ammount,
 	'is_discount_ongkir' => $flashsale->is_discount_ongkir,
 	'discount_ongkir_price' => $flashsale->discount_ongkir_price,
 	'discount_ongkir_percent' => $flashsale->discount_ongkir_percent,
-	'is_free_ongkir' => $flashsale->is_free_ongkir,
 	'maximum_discount' => $flashsale->maximum_discount,
 	'maximum_ongkir_discount' => $flashsale->maximum_ongkir_discount,
 ];
@@ -133,6 +133,12 @@ $flash_sale = [
 									<input type="number" name="discount_percent" class="form-control" id="discount_percent" placeholder="10" v-model="flash_sale.discount_percent">
 								</div>
 							</div>
+							<div class="col-6">
+								<div class="form-group">
+									<label for="name">Minimum Qty</label>
+									<input type="number" name="minimum_qty" class="form-control" id="minimum_qty" placeholder="1" v-model="flash_sale.minimum_qty">
+								</div>
+							</div>
 							{{-- <div class="col-6">
 							<div class="form-group">
 							<label for="maximum_discount">Maximum Discount</label>
@@ -172,9 +178,9 @@ $flash_sale = [
 							</div>
 							</div> --}}
 							<div class="col-6">
-								<div class="form-group mb-0" style="height: 15px">
-									<label for="discount_ongkir_percent mb-0">Free Ongkir</label>
-									<input type="checkbox" name="is_free_ongkir" v-model="flash_sale.is_free_ongkir" class="ml-2">
+								<div class="form-group">
+									<label for="name">Minimum Qty</label>
+									<input type="number" name="free_ongkir_minimum_qty" class="form-control" id="free_ongkir_minimum_qty" placeholder="1" v-model="flash_sale.free_ongkir_minimum_qty">
 								</div>
 							</div>
 						</div>
@@ -498,11 +504,11 @@ $('#discount_value').show();
 					published_at : null,
 					ended_at : null,
 					minimum_qty : null,
+					free_ongkir_minimum_qty : null,
 					is_discount_ammount : false,
 					is_discount_ongkir : false,
 					discount_ongkir_price : null,
 					discount_ongkir_percent : null,
-					is_free_ongkir : null,
 					maximum_discount : null,
 					maximum_ongkir_discount : null,
 				},
@@ -521,6 +527,7 @@ $('#discount_value').show();
 			this.flash_sale.published_at = flashSale.published_at;
 			this.flash_sale.ended_at = flashSale.ended_at;
 			this.flash_sale.minimum_qty = flashSale.minimum_qty;
+			this.flash_sale.free_ongkir_minimum_qty = flashSale.free_ongkir_minimum_qty;
 
 			// this.flash_sale.is_discount_ammount = flashSale.is_discount_ammount;
 			// this.flash_sale.is_discount_ongkir = flashSale.is_discount_ongkir;
@@ -530,9 +537,9 @@ $('#discount_value').show();
 			if (flashSale.is_discount_ongkir) {
 				this.flash_sale.is_discount_ongkir = true;
 			}
-			if (flashSale.is_free_ongkir) {
-				this.flash_sale.is_free_ongkir = true;
-			}
+			// if (flashSale.is_free_ongkir) {
+			// 	this.flash_sale.is_free_ongkir = true;
+			// }
 			this.flash_sale.discount_ongkir_price = flashSale.discount_ongkir_price;
 			this.flash_sale.discount_ongkir_percent = flashSale.discount_ongkir_percent;
 			this.flash_sale.maximum_discount = flashSale.maximum_discount;
