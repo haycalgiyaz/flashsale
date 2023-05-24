@@ -89,14 +89,7 @@ $flash_sale = [
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<label for="name">Minimum Qty</label>
-								<input type="number" name="minimum_qty" class="form-control" id="minimum_qty" placeholder="1" v-model="flash_sale.minimum_qty">
-							</div>
-						</div>
-					</div>
+					
 					<div class="row" style="display:none">
 						<div class="col-md-12">
 							<div class="form-group">
